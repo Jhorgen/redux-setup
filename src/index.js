@@ -4,15 +4,12 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { combineReducers, createStore } from 'redux';
+import { Provider } from 'react-redux';
+import productsReducer from './reducers/productsReducer.js'
+import userReducer from './reducers/userReducer.js'
 
 
-function productsReducer(state = [], action) {
-  return state;
-}
 
-function userReducer(state = '', action) {
-  return state;
-}
 
 const allReducers = combineReducers({
     products: productsReducer,
@@ -24,15 +21,13 @@ const initialState = {
   user: 'hello world'
 }
 
-const store = createStore(allReducers, initialState);
+const store = createStore(allReducers, initialState, window.devToolsExtension && window.devToolsExtension());
+
+
 
 console.log(store.getState());
 
-
-store.dispatch(action);
-console.log(store.getState());
-
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Provider store={store}> <App />< /Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
