@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import updateUser from './actions/user-actions';
+import { updateUser, apiRequest } from './actions/user-actions';
 
 var testStyle = {
   textAlign: 'center'
@@ -14,32 +15,42 @@ class App extends Component {
     this.onUpdateUser = this.onUpdateUser.bind(this);
   }
 
-  onUpdateUser() {
-    this.props.onUpdateUser('Sam');
-    console.log('clicked');
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.onApiRequest();
+
+    }, 1500);
+  }
+
+  onUpdateUser(event) {
+    this.props.onUpdateUser(event.target.value);
   }
 
   render() {
     console.log(this.props);
 
     return (
-      <div>
-      <h1 style={testStyle}>{this.props.user}</h1>
+      <div style={testStyle}>
+      <h1>{this.props.user}</h1>
       <input onChange={this.onUpdateUser}/>
-      <div onClick={this.onUpdateUser}>Update</div>
-      {this.props.user}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-products: state.products,
-user: state.user
-});
+const mapStateToProps = (state, props) => {
+  console.log(props);
+
+  return {
+  products: state.products,
+  user: state.user,
+  userPlusProp: `${state.user} ${props.aRandomProps}`
+ }
+};
 
 const mapActionsToProps = {
-onUpdateUser: updateUser
-}
+  onUpdateUser: updateUser,
+  onApiRequest: apiRequest
+};
 
 export default connect(mapStateToProps, mapActionsToProps)(App);
