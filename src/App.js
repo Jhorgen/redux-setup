@@ -3,6 +3,7 @@ import './App.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updateUser, apiRequest } from './actions/user-actions';
+import { createSelector } from 'reselect';
 
 var testStyle = {
   textAlign: 'center'
@@ -13,13 +14,6 @@ class App extends Component {
     super(props);
 
     this.onUpdateUser = this.onUpdateUser.bind(this);
-  }
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.props.onApiRequest();
-
-    }, 1500);
   }
 
   onUpdateUser(event) {
@@ -38,15 +32,24 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  console.log(props);
+const productsSelector = createSelector(
+  state => state.products,
+  products => products
+);
 
-  return {
-  products: state.products,
-  user: state.user,
-  userPlusProp: `${state.user} ${props.aRandomProps}`
- }
-};
+const userSelector = createSelector(
+  state => state.user,
+  user => user
+);
+
+const mapStateToProps = createSelector(
+productsSelector,
+userSelector,
+  (products, user) => ({
+    products,
+    user
+  })
+);
 
 const mapActionsToProps = {
   onUpdateUser: updateUser,
